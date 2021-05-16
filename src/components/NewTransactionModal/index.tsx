@@ -25,15 +25,22 @@ export function NewTransactionModal({
   const [type, setType] = useState("deposit");
 
   // Tipar o event com o FormEvent
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
-    
-    createTransaction({
+
+    await createTransaction({
       title,
       category,
       type,
       amount,
     });
+    // Mesmo fechando o modal os valores digitados continuam
+    // então precisamos resetar para os valores iniciais.
+    setTitle("");
+    setAmount(0);
+    setCategory("");
+    setType("deposit");
+    onRequestClose();
   }
 
   return (

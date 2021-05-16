@@ -22,11 +22,11 @@ interface TransactionProviderProps {
 // Antes era só a tansactions que é um aray, agoa vou mandar junto uma função
 interface TransactionsContextData {
   transactions: Transaction[];
-  createTransaction: (transaction: TransactionInput) => void;
+  createTransaction: (transaction: TransactionInput) => Promise<void>;
 }
 
 export const TransactionsContext = createContext<TransactionsContextData>(
-  // Essa parte do código é para informar que vamos passar um objeto e evitar o erro 
+  // Essa parte do código é para informar que vamos passar um objeto e evitar o erro
   {} as TransactionsContextData
 );
 
@@ -38,8 +38,17 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
       .then((response) => setTransactions(response.data.transactions));
   }, []);
 
-  function createTransaction(transaction: TransactionInput) {
-    api.post("/transactions", transaction);
+  async function createTransaction(transactionInput: TransactionInput) {
+    const response = await api.post("/transactions", {
+      ...transactionInput,
+      createdAt: new Date()
+    });
+    const { transaction } = response.data;
+
+    setTransactions([
+      ...transactions, // Eu busco as informações que tinha
+      transaction, // e adiciono minhas novas informaçoes
+    ]);
   }
 
   return (

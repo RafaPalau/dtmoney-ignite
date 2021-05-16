@@ -9,7 +9,7 @@ createServer({
     transaction: Model, // Importar o Model do Mirage
   },
 
-  // dados pré cadastrados para ficar com visualização mais amigável
+  // // dados pré cadastrados para ficar com visualização mais amigável
   seeds(server) {
     server.db.loadData({
       transactions: [
