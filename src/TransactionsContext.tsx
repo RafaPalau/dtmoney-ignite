@@ -9,13 +9,28 @@ interface Transaction {
   category: string;
   createdAt: string;
 }
-interface TransactionProviderProps{
-  children: ReactNode
+
+// TransactionInput herda tudo menos id e createdAt
+// jà que essas informações não colocaremos no nosso formulario
+type TransactionInput = Omit<Transaction, "id" | "createdAt">;
+
+interface TransactionProviderProps {
+  children: ReactNode;
 }
 
-export const TransactionsContext = createContext<Transaction[]>([]);
+// Para infomar qual conteudo vou mandar dentro do context.
+// Antes era só a tansactions que é um aray, agoa vou mandar junto uma função
+interface TransactionsContextData {
+  transactions: Transaction[];
+  createTransaction: (transaction: TransactionInput) => void;
+}
 
-export function TransactionsProvider({children}: TransactionProviderProps) {
+export const TransactionsContext = createContext<TransactionsContextData>(
+  // Essa parte do código é para informar que vamos passar um objeto e evitar o erro 
+  {} as TransactionsContextData
+);
+
+export function TransactionsProvider({ children }: TransactionProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   useEffect(() => {
     api
@@ -23,9 +38,13 @@ export function TransactionsProvider({children}: TransactionProviderProps) {
       .then((response) => setTransactions(response.data.transactions));
   }, []);
 
+  function createTransaction(transaction: TransactionInput) {
+    api.post("/transactions", transaction);
+  }
+
   return (
-    <TransactionsContext.Provider value={transactions}>
+    <TransactionsContext.Provider value={{ transactions, createTransaction }}>
       {children}
-         </TransactionsContext.Provider>
+    </TransactionsContext.Provider>
   );
 }
