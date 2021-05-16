@@ -2,8 +2,12 @@ import { Container } from "./styles";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
 import totalImg from "../../assets/total.svg";
+import React, { useContext } from "react";
+import { TransactionsContext } from "../../TransactionsContext";
 
 export function Summary() {
+  const transactions = useContext(TransactionsContext);
+  console.log(transactions)
   return (
     <Container>
       <div>
@@ -20,7 +24,7 @@ export function Summary() {
         </header>
         <strong>- R$1000,00</strong>
       </div>
-      <div className="hightlight-backgound">
+      <div className='hightlight-backgound'>
         <header>
           <p>Entradas</p>
           <img src={totalImg} alt='Entradas' />
