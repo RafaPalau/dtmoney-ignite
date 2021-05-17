@@ -2,20 +2,10 @@ import { Container } from "./styles";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
 import totalImg from "../../assets/total.svg";
-import React, { useContext } from "react";
-import { TransactionsContext } from "../../TransactionsContext";
+import { useTransactions } from "../../hooks/useTransactions";
 
 export function Summary() {
-  const { transactions } = useContext(TransactionsContext);
-
-  // Se o tipo fo deposito reduz o acumulado + amount
-  // Se não retorna
-  // const totalDeposit = transactions.reduce((acc, transaction) => {
-  //   if (transaction.type === "deposit") {
-  //     return acc + transaction.amount;
-  //   }
-  //   return acc;
-  // }, 0);
+  const { transactions } = useTransactions();
 
   const summary = transactions.reduce(
     (acc, transaction) => {
